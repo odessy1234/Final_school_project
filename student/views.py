@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from .models import Student, Profile, Course, Enrollment
 from .forms import StudentForm, RegisterForm, LoginForm
+from django.contrib import messages
 
 
 # =========================
@@ -135,37 +136,56 @@ def register_view(request):
 
     return render(request, 'register.html', {'form': form})
 
-
 # =========================
 # LOGIN (ROLE BASED)
 # =========================
 def login_view(request):
+
     form = LoginForm()
 
     if request.method == "POST":
+
         form = LoginForm(request.POST)
 
         if form.is_valid():
+
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+
             user = authenticate(
                 request,
-                username=form.cleaned_data['username'],
-                password=form.cleaned_data['password']
+                username=username,
+                password=password
             )
 
-            if user:
+            if user is not None:
+
                 login(request, user)
 
-                # STAFF (admin user)
+                # Admin
                 if user.is_staff:
                     return redirect('dashboard')
 
                 profile = Profile.objects.filter(user=user).first()
 
+                # Teacher
                 if profile and profile.role == "teacher":
                     return redirect('teacher_dashboard')
 
+                # Student
                 return redirect('student_dashboard')
 
+            else:
+                messages.error(
+                    request,
+                    "Invalid username or password!"
+                )
+
+        else:
+            messages.error(
+                request,
+                "Please fill all required fields correctly."
+            )
 
     return render(request, 'login.html', {'form': form})
 
@@ -215,11 +235,15 @@ def create_course(request):
 
     return render(request, 'create_course.html')
 
+# Admin Dashboard
 @staff_member_required
 def admin_dashboard(request):
     return render(request, "admin_dashboard.html", {
         "total_students": Student.objects.count(),
     })
+
+
+# Student Dashboard
 
 @login_required
 def student_dashboard(request):
@@ -239,7 +263,6 @@ def student_dashboard(request):
     })
 
 #=============Course Detail ===========
-#======================================
 @login_required
 def course_detail(request, id):
     course = get_object_or_404(Course, id=id)
