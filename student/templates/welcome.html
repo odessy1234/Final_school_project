@@ -7,32 +7,65 @@
 
 <title>Student Management System</title>
 
+<!-- Bootstrap -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Bootstrap Icons -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+<!-- AOS Animation -->
+<link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
 
 <style>
 
-/* ================= ROOT ================= */
 :root{
     --primary:#4f46e5;
+    --primary-dark:#3730a3;
     --bg:#f6f7fb;
     --text:#111827;
     --muted:#6b7280;
     --border:#e5e7eb;
+    --card:#ffffff;
 }
 
-/* ================= BASE ================= */
+/* DARK MODE */
+.dark-mode{
+    --bg:#0f172a;
+    --text:#f1f5f9;
+    --muted:#94a3b8;
+    --border:#1e293b;
+    --card:#111827;
+}
+
 body{
     font-family:'Segoe UI',sans-serif;
     background:var(--bg);
     color:var(--text);
+    transition:0.3s ease;
 }
 
-/* ================= NAVBAR ================= */
+/* LOADER */
+#loader{
+    position:fixed;
+    inset:0;
+    background:#4f46e5;
+    z-index:99999;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    transition:0.5s;
+}
+
+/* NAVBAR */
 .navbar{
-    background:rgba(255,255,255,0.85);
-    backdrop-filter: blur(10px);
+    background:rgba(255,255,255,0.8);
+    backdrop-filter:blur(10px);
     border-bottom:1px solid var(--border);
+    transition:0.3s ease;
+}
+
+.dark-mode .navbar{
+    background:rgba(15,23,42,0.9);
 }
 
 .navbar-brand{
@@ -40,97 +73,81 @@ body{
     color:var(--primary);
 }
 
-/* ================= HERO (IMPROVED ONLY) ================= */
+/* HERO */
 .hero{
-    background: linear-gradient(135deg, #4f46e5, #2563eb);
-    border-radius: 22px;
-    padding: 80px 50px;
-    margin-top: 25px;
-    color: white;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 20px 45px rgba(0,0,0,0.15);
+    background:linear-gradient(-45deg,#4f46e5,#2563eb,#7c3aed,#3b82f6);
+    background-size:400% 400%;
+    animation:gradientMove 12s ease infinite;
+    color:white;
+    border-radius:24px;
+    padding:80px 50px;
+    margin-top:25px;
+    overflow:hidden;
+    box-shadow:0 20px 40px rgba(0,0,0,0.15);
+    position:relative;
 }
 
-/* soft animated glow */
+/* ===== HERO ANIMATION UPGRADE ===== */
+
+/* soft glow layers */
 .hero::before{
     content:"";
     position:absolute;
     width:420px;
     height:420px;
-    background:rgba(255,255,255,0.12);
+    background:rgba(255,255,255,0.08);
     filter:blur(90px);
     top:-120px;
     left:-100px;
     border-radius:50%;
-    animation: glowMove 7s ease-in-out infinite;
+    animation:heroGlow 8s ease-in-out infinite;
 }
 
 .hero::after{
     content:"";
     position:absolute;
-    width:320px;
-    height:320px;
-    background:rgba(0,0,0,0.15);
+    width:300px;
+    height:300px;
+    background:rgba(0,0,0,0.12);
     filter:blur(90px);
     bottom:-120px;
-    right:-120px;
+    right:-100px;
     border-radius:50%;
-    animation: glowMove2 8s ease-in-out infinite;
+    animation:heroGlow2 10s ease-in-out infinite;
 }
 
-/* TEXT */
-.hero-title{
-    font-size: clamp(2rem,4vw,2.8rem);
-    font-weight: 800;
-    animation: fadeUp 0.8s ease forwards;
+/* TEXT animation */
+.hero h1{
+    animation:fadeUp 0.9s ease forwards;
 }
 
-.hero-subtitle{
+.hero p{
     opacity:0;
-    animation: fadeUp 1s ease forwards;
-    animation-delay:0.2s;
+    animation:fadeUp 1.1s ease forwards;
+    animation-delay:0.15s;
 }
 
-/* CTA */
-.hero-cta{
+/* BUTTON animation */
+.hero .btn{
     opacity:0;
-    animation: fadeUp 1s ease forwards;
-    animation-delay:0.4s;
-}
-
-/* IMAGE */
-.hero-image{
-    opacity:0;
-    animation: fadeRight 1s ease forwards;
+    animation:fadeUp 1.2s ease forwards;
     animation-delay:0.3s;
 }
 
-.hero-image img{
+/* IMAGE animation */
+.hero img{
     width:100%;
     max-width:320px;
     border-radius:20px;
-    box-shadow:0 20px 40px rgba(0,0,0,0.25);
-    animation: float 5s ease-in-out infinite;
+    animation:floatSmooth 6s ease-in-out infinite;
+    box-shadow:0 15px 30px rgba(0,0,0,0.25);
 }
 
-/* BUTTONS */
-.btn-glow{
-    border-radius:999px;
-    transition:0.25s;
-    font-weight:600;
-}
-
-.btn-glow:hover{
-    transform:translateY(-3px);
-}
-
-/* ================= KEYFRAMES ================= */
-
+/* KEYFRAMES */
 @keyframes fadeUp{
     from{
         opacity:0;
-        transform:translateY(25px);
+        transform:translateY(18px);
     }
     to{
         opacity:1;
@@ -138,36 +155,164 @@ body{
     }
 }
 
-@keyframes fadeRight{
-    from{
-        opacity:0;
-        transform:translateX(40px);
+@keyframes floatSmooth{
+    0%,100%{
+        transform:translateY(0);
     }
-    to{
-        opacity:1;
-        transform:translateX(0);
+    50%{
+        transform:translateY(-10px);
     }
 }
 
-@keyframes float{
-    0%,100%{transform:translateY(0);}
-    50%{transform:translateY(-12px);}
+@keyframes heroGlow{
+    0%,100%{
+        transform:translate(0,0);
+    }
+    50%{
+        transform:translate(30px,20px);
+    }
 }
 
-@keyframes glowMove{
-    0%,100%{transform:translate(0,0);}
-    50%{transform:translate(40px,30px);}
+@keyframes heroGlow2{
+    0%,100%{
+        transform:translate(0,0);
+    }
+    50%{
+        transform:translate(-30px,-20px);
+    }
 }
 
-@keyframes glowMove2{
-    0%,100%{transform:translate(0,0);}
-    50%{transform:translate(-40px,-30px);}
+/* BUTTONS */
+.btn-glow{
+    border-radius:999px;
+    font-weight:600;
+    transition:0.25s;
+    box-shadow:0 10px 20px rgba(0,0,0,0.15);
+}
+
+.btn-glow:hover{
+    transform:translateY(-3px);
+    box-shadow:0 15px 30px rgba(0,0,0,0.25);
+}
+
+.btn-glow-outline{
+    border-radius:999px;
+    transition:0.25s;
+}
+
+.btn-glow-outline:hover{
+    background:white;
+    color:#4f46e5;
+    transform:translateY(-3px);
+}
+
+/* SECTION */
+section{
+    padding:70px 0;
+}
+
+/* FEATURE CARDS */
+.feature-card{
+    background:var(--card);
+    border-radius:20px;
+    transition:0.25s;
+    transform-style:preserve-3d;
+}
+
+.feature-card:hover{
+    box-shadow:0 15px 30px rgba(0,0,0,0.08);
+}
+
+/* BLOG */
+.card{
+    border:none;
+    border-radius:20px;
+    overflow:hidden;
+    background:var(--card);
+    transition:0.25s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 12px 25px rgba(0,0,0,0.08);
+}
+
+.card img{
+    height:220px;
+    object-fit:cover;
+}
+
+/* COUNTER */
+.counter-box{
+    background:var(--card);
+    border-radius:20px;
+    padding:30px;
+    text-align:center;
+}
+
+.counter{
+    font-size:2.5rem;
+    font-weight:800;
+    color:var(--primary);
+}
+
+/* FOOTER */
+footer{
+    background:var(--card);
+    padding:30px;
+    border-top:1px solid var(--border);
+}
+
+/* TOP BUTTON */
+#topBtn{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    width:45px;
+    height:45px;
+    border:none;
+    border-radius:50%;
+    background:var(--primary);
+    color:white;
+    display:none;
+    z-index:999;
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+
+    section{
+        padding:45px 0;
+    }
+
+    .hero{
+        padding:45px 25px;
+        text-align:center;
+    }
+
+    .hero img{
+        margin-top:25px;
+        max-width:250px;
+    }
+
+}
+
+/* gradient background animation (keep original) */
+@keyframes gradientMove{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
 }
 
 </style>
 </head>
 
 <body>
+
+<!-- LOADER -->
+<div id="loader">
+    <div class="spinner-border text-light"></div>
+</div>
 
 <!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg sticky-top">
@@ -176,6 +321,85 @@ body{
     <a class="navbar-brand" href="{% url 'welcome' %}">
         StudentMS
     </a>
+
+    <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="nav">
+
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'add_student' %}">
+                    Add Student
+                </a>
+            </li>
+            {% endif %}
+
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'school_info' %}">
+                    School Info
+                </a>
+            </li>
+
+            {% if user.is_authenticated %}
+
+                {% if user.profile.role == 'teacher' %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'teacher_dashboard' %}">
+                            Dashboard
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'student_dashboard' %}">
+                            Dashboard
+                        </a>
+                    </li>
+                {% endif %}
+
+                <li class="nav-item">
+                    <span class="nav-link">
+                        Hi, {{ user.username }}
+                    </span>
+                </li>
+
+                <li class="nav-item">
+                    <form method="POST" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button class="btn btn-outline-danger btn-sm">
+                            Logout
+                        </button>
+                    </form>
+                </li>
+
+            {% else %}
+
+                <li class="nav-item">
+                    <a class="btn btn-primary btn-sm" href="{% url 'login' %}">
+                        Login
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="btn btn-outline-primary btn-sm" href="{% url 'register' %}">
+                        Register
+                    </a>
+                </li>
+
+            {% endif %}
+
+            <li class="nav-item">
+                <button class="btn btn-sm btn-dark" id="themeToggle">
+                    <i class="bi bi-moon-stars-fill"></i>
+                </button>
+            </li>
+
+        </ul>
+
+    </div>
 
 </div>
 </nav>
@@ -187,49 +411,32 @@ body{
 
     <div class="row align-items-center g-4">
 
-        <!-- TEXT -->
-        <div class="col-lg-7">
+        <div class="col-lg-7" data-aos="fade-right">
 
-            <h1 class="hero-title">
-                University Management System
-            </h1>
+            <h1 id="typing-text"></h1>
 
-            <p class="mt-3 hero-subtitle">
-                Effortlessly manage students, courses, teachers, and enrollments with a modern and professional dashboard.
+            <p class="mt-3">
+                Effortlessly manage students, teachers, courses, attendance,
+                enrollments and reports with a modern university dashboard.
             </p>
 
-            <div class="mt-4 d-flex gap-3 flex-wrap hero-cta">
+            <div class="mt-4 d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
 
-                {% if user.is_authenticated %}
+                <a href="{% url 'login' %}" class="btn btn-light btn-glow px-4">
+                    Get Started
+                </a>
 
-                    {% if user.profile.role == 'teacher' %}
-                        <a href="{% url 'teacher_dashboard' %}" class="btn btn-light btn-glow px-4">
-                            Dashboard
-                        </a>
-                    {% else %}
-                        <a href="{% url 'student_dashboard' %}" class="btn btn-light btn-glow px-4">
-                            Dashboard
-                        </a>
-                    {% endif %}
-
-                {% else %}
-                    <a href="{% url 'login' %}" class="btn btn-light btn-glow px-4">
-                        Login
-                    </a>
-                {% endif %}
-
-                <a href="{% url 'school_info' %}" class="btn btn-outline-light px-4">
-                    School Info
+                <a href="{% url 'school_info' %}" class="btn btn-outline-light btn-glow-outline px-4">
+                    Learn More
                 </a>
 
             </div>
 
         </div>
 
-        <!-- IMAGE -->
-        <div class="col-lg-5 text-center hero-image">
+        <div class="col-lg-5 text-center" data-aos="zoom-in">
 
-            <img src="{% static 'images/student_image.jpg' %}" alt="student">
+            <img src="{% static 'images/student_image.jpg' %}" alt="Student">
 
         </div>
 
@@ -239,16 +446,78 @@ body{
 
 </section>
 
-<!-- FEATURES (UNCHANGED CONTENT AREA - KEEP YOUR ORIGINAL HERE) -->
-<!-- YOU CAN PASTE YOUR ORIGINAL FEATURES SECTION BELOW THIS -->
+<!-- FEATURES -->
+<section class="container">
+<!-- your original content unchanged -->
+</section>
 
-<!-- BLOG (UNCHANGED) -->
-<!-- KEEP YOUR ORIGINAL BLOG SECTION -->
+<!-- BLOG -->
+<section class="container">
+<!-- your original content unchanged -->
+</section>
 
 <!-- FOOTER -->
-<footer class="text-center mt-5 py-4 border-top">
+<footer class="text-center">
     <small>© 2026 Student Management System</small>
 </footer>
+
+<!-- BACK TO TOP -->
+<button id="topBtn">
+    <i class="bi bi-arrow-up"></i>
+</button>
+
+<!-- JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
+<script>
+
+/* AOS */
+AOS.init({ duration: 900, once: true });
+
+/* LOADER */
+window.addEventListener("load",()=>{
+    document.getElementById("loader").style.opacity="0";
+    setTimeout(()=>document.getElementById("loader").style.display="none",500);
+});
+
+/* TYPING (clean version) */
+const text = "University Management System";
+let i = 0;
+const el = document.getElementById("typing-text");
+
+function type(){
+    if(!el) return;
+    if(i < text.length){
+        el.innerHTML += text.charAt(i);
+        i++;
+        setTimeout(type, 70);
+    }
+}
+
+window.addEventListener("load", type);
+
+/* COUNTER (unchanged logic if you have it) */
+
+/* TOP BUTTON */
+const topBtn = document.getElementById("topBtn");
+
+window.addEventListener("scroll",()=>{
+    topBtn.style.display = window.scrollY > 300 ? "block" : "none";
+});
+
+topBtn.onclick = ()=>{
+    window.scrollTo({ top:0, behavior:"smooth" });
+};
+
+/* DARK MODE */
+const themeToggle = document.getElementById("themeToggle");
+
+themeToggle?.addEventListener("click",()=>{
+    document.body.classList.toggle("dark-mode");
+});
+
+</script>
 
 </body>
 </html>
